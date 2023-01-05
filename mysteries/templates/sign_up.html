@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+
+{% block body %}
+<div class="container mx-auto">
+    <form method="post" class="p-4 flex flex-col items-center gap-2">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Sign Up" class="btn btn-primary">
+    </form>
+</div>
+{% endblock %}

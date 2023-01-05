@@ -1,0 +1,66 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="container mx-auto p-5">
+    <h1 class="text-2xl font-bold my-2">{{mystery.title}}</h1>
+    <p>{{mystery.description}}</p>
+
+    <h2 class="text-xl font-semibold mt-2">Clues</h2>
+    {% if mystery.clues %}
+    <p>{{mystery.clues}}</p>
+    {% else %}
+    <p>No clues were provided</p>
+    {% endif %}
+
+    {% if user_answer %}
+    <h3 class="text-xl font-bold mt-2">Your Answer</h3>
+    <p>{{user_answer.answer}}</p>
+
+    <button class="btn btn-primary my-4" onclick="document.getElementById('solution').classList.toggle('hidden')">See
+        Solution</button>
+
+    <div id="solution">
+        <h2 class="text-xl font-bold">Solution</h2>
+        <p class="text-lg">{{mystery.solution}}</p>
+    </div>
+
+    <button class="btn btn-primary my-4" onclick="document.getElementById('answers').classList.toggle('hidden')">See all
+        Answers</button>
+
+    <div id="answers" class="hidden">
+        <h2 class="text-xl font-bold my-4">All Answers by Users</h2>
+        <div class="flex gap-2">
+
+            {% for answer in all_answers %}
+            <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+                <!-- <img class="w-full" src="mystery-image.jpg" alt="Mystery Image"> -->
+                <div class="px-6 py-4">
+                    <a href="{% url 'view_profile' answer.answered_by.id %}"
+                        class="font-bold text-xl mb-2">{{answer.answered_by.username}}</a>
+                    <p class="text-gray-700 text-base">
+                        {{answer.answer}}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <button class=" btn btn-primary my-4" onclick="document.getElementById('answer-form').classList.toggle('hidden')">
+        Answer
+        This Mystery</button>
+    {% endif %}
+
+    <form method="post" class="flex flex-col p-4 justify-center gap-4 hidden" id="answer-form"
+        action="{% url 'answer_mystery' mystery.id %}">
+        {% csrf_token %}
+
+        <div class="flex flex-col gap-2  justify-start">
+            <label for="answer">Answer: </label>
+            <textarea type="text" name="answer" id="answer" placeholder="Answer" required></textarea>
+        </div>
+
+        <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
+</div>
+{% endblock %}

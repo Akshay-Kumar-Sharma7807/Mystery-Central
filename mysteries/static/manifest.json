@@ -1,6 +1,6 @@
 {
-    "name": "Mystery Central",
-    "short_name": "Myst. Central",
+    "name": "MysteryHub",
+    "short_name": "MystHub",
     "start_url": "/",
     "display": "standalone",
     "description": "Share and Solve Mysteries with Friends and Family",

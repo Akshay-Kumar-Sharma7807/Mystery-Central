@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<div class="container mx-auto p-5">
+    <form method="post" class="flex flex-col p-4 justify-center gap-4 hidden" id="answer-form">
+        {% csrf_token %}
+
+        <div class="flex flex-col gap-2  justify-start">
+            <label for="answer">Answer: </label>
+            <textarea type="text" name="answer" id="answer" placeholder="Answer" required></textarea>
+        </div>
+
+        <input type="submit" value="Submit" class="btn btn-primary">
+    </form>
+</div>
+{% endblock %}
