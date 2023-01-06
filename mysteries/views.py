@@ -81,16 +81,18 @@ def review_answer(request, ans_id):
     else:
         pass
 
-
-def about(request):
-    return render(request, 'about.html')
-
 def mysteries(request):
     mysteries = Mystery.objects.all()
     return render(request, 'mysteries.html', {
         "mysteries": mysteries
     })
 
+
+def about(request):
+    return render(request, 'about.html')
+
+def settings(request):
+    return render(request, 'settings.html')
 
 @login_required
 def profile(request):

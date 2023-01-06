@@ -6,8 +6,8 @@
     "description": "Share and Solve Mysteries with Friends and Family",
     "lang": "eng",
     "dir": "auto",
-    "theme_color": "#008080",
-    "background_color": "#008080",
+    "theme_color": "#000000",
+    "background_color": "#000000",
     "orientation": "any",
     "icons": [
         {
@@ -37,10 +37,22 @@
     ],
     "screenshots": [
         {
-            "src": "https://www.pwabuilder.com/assets/screenshots/screen1.png",
-            "sizes": "2880x1800",
+            "src": "images/screenshot.png",
+            "sizes": "1366x657",
             "type": "image/png",
             "description": "A screenshot of the home page"
+        },
+        {
+            "src": "images/screenshot2.png",
+            "sizes": "1366x657",
+            "type": "image/png",
+            "description": "A screenshot of creating mystery"
+        },
+        {
+            "src": "images/screenshot3.png",
+            "sizes": "1366x657",
+            "type": "image/png",
+            "description": "A screenshot of solving mystery"
         }
     ],
     "related_applications": [

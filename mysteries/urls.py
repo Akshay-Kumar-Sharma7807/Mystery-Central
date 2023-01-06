@@ -5,6 +5,7 @@ urlpatterns = [
     # general
     path('', views.index, name="index"),
     path('about', views.about, name="about"),
+    path('settings', views.settings, name="settings"),
 
     # mystery related
     path('create', views.create_mystery, name="create_mystery"),

@@ -46,6 +46,7 @@ TAILWIND_APP_NAME = 'mysteries'
 INSTALLED_APPS = [
     'mysteries',
     'tailwind',
+    'pwa',
     'django_browser_reload',
     'django.contrib.admin',
     'django.contrib.auth',
