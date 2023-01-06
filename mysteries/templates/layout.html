@@ -28,7 +28,7 @@
           class="flex flex-col fixed top-0 right-0 left-0 bottom-0 text-2xl bg-gray-800 z-10 justify-center items-center gap-8 text-md text-gray-300 nav-list hidden md:flex">
           <button id="close-btn" class="absolute top-2 right-2"><i class="bi bi-x-circle"></i></button>
           <li><a href="{% url 'index' %}"><i class="bi bi-house"></i><span>Home</span></a></li>
-          <li><a href="#"><i class="bi bi-card-list"></i><span>Mysteries</span></a></li>
+          <li><a href="{% url 'mysteries' %}"><i class="bi bi-card-list"></i><span>Mysteries</span></a></li>
           {% if user.is_authenticated %}
           <!-- <li>
 					<a href="{" class="nav-link"><i
