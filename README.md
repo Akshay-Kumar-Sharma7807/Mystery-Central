@@ -1,30 +1,46 @@
-# Python on Replit
+## Setup
 
-This is a template to get you started with Python on Replit. It's ready to go so you can just hit run and start coding!
-
-## Running the repl
-
-1. Setup a new secret environment variable (the lock icon) where the key is `SECRET_KEY` and the value is
-   a randomly generated token of 32 bits of randomnese. To generate such a token type this into the shell and hit Enter:
 ```
-python
-import secrets
-secrets.token_urlsafe(32)
+git clone https://github.com/Akshay-Kumar-Sharma7807/MysteryHub.git
+pip install django
+pip install django-pwa
+pip install django-tailwind
+python manage.py runserver
 ```
-2. Hit run!
-
-See this 1 minute video for a walkthrough: [https://www.loom.com/share/ecc4e738149f4d1db3bcff01758b3e71](https://www.loom.com/share/341b5574d12040fb9fcbbff150777f1c)
-
-## Installing packages
-
-To add packages to your repl, you can just import directly in the file you want to use the package in, and it will automatically be installed when you press the run button. Like below:
-```python
-import math
-import pandas as pd
+then run this in another terminal if you want to edit the project.
+```
+python manage.py tailwind start
 ```
 
-You could also install packages by using the Replit packager interface in the left sidebar.
+## Inspiration
+It's fun to solve riddles and puzzles. I wanted to provide a platform for sharing mysteries and puzzles. A platform where people can share their puzzles and let the other people use their grey cells to figure out the answer.
 
-## Help
+## What it does
+It's a web app that makes it easy and fun to share riddles and mysteries to people. User can make their own mysteries and other people can try to answer them. The User then can verify which answers are right.
+It's really fun to see what other's also have answered to the same riddle.
+Some of the features are
+- Easy to use interface
+- User's can share mysteries and show their talent
+- Answers are reviewed by the author of mystery.
+- Small App size, Installable on any device
+- Responsive Layout on any screen size
 
-If you need help you might be able to find an answer on our [docs](https://docs.replit.com) page. Feel free to report bugs and give us feedback [here](https://replit.com/support).
+## How we built it
+I built it with django python framework. I used tailwind css for the frontend. Many tools were used such as figma.
+## Challenges we ran into
+Challenges were to make a full stack web app. I learned how to use django templates and auth. I made the app an PWA (Progressive Web App) so that It can work offline.
+
+## Accomplishments that we're proud of
+I built a app that improves people's reasoning ability. This is a full stack app ready for production (That's what I think, if I am right). This can make people think and reason about puzzles, riddles and mysteries
+
+## What we learned
+I learned how to use django, python, jinja templates, auth, frontend design with tailwind and more.
+How to develop with django on replit. 
+
+## What's next for MysteryHub
+I'll be adding more features like user can unlock achivements by solving mysteries which will make this app more engaging. Comments system so that user's can present their thought. Leaderboard to show how the user's are scoring. And this app can be a great platform for mystery story writers. This app can engage many user's to read and solve mysteries promoting the talent of mystery story writers.
+Adding markdown so that user's can format what they write.
+
+## Django library used
+- django-pwa
+- django-tailwind
