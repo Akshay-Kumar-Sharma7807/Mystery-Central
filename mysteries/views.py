@@ -1,7 +1,11 @@
-from django.shortcuts import render, redirect
+import json
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 from .forms import SignUpForm, LogInForm
 from .forms import CreateMysteryForm, AnswerForm
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import User, Mystery, Answer
 
@@ -13,6 +17,8 @@ def index(request):
     })
 
 # Form for creating new mystery
+
+@login_required
 def create_mystery(request):
     if request.method == 'POST':
         form = CreateMysteryForm(request.POST)
@@ -29,15 +35,21 @@ def create_mystery(request):
 
 def view_mystery(request, myst_id):
     mystery = Mystery.objects.filter(id=myst_id).first()
-    user_answer = Answer.objects.filter(answered_by=request.user, mystery=mystery).first()
+    try:
+        user_answer = Answer.objects.filter(answered_by=request.user, mystery=mystery).first()
+    except:
+        user_answer = None
     all_answers = Answer.objects.filter(mystery=mystery)
+    reviews = Answer.objects.filter(mystery=mystery, reviewed=False)
     print(mystery)
     return render(request, "mystery.html", {
         "mystery": mystery,
         "user_answer": user_answer,
-        "all_answers": all_answers
+        "all_answers": all_answers,
+        "reviews": reviews
     })
 
+@login_required
 def answer_mystery(request, myst_id):
     mystery = Mystery.objects.filter(id=myst_id).first()
 
@@ -53,7 +65,21 @@ def answer_mystery(request, myst_id):
             return redirect('view_mystery', myst_id=mystery.id)
     else:
         return render(request, 'answer_mystery.html')
-        
+
+
+@csrf_exempt
+@login_required
+def review_answer(request, ans_id):
+    if request.method == "PUT":
+        answer = Answer.objects.get(id=ans_id)
+        data = json.loads(request.body)
+        if data.get("correct") is not None:
+            answer.correct = data["correct"]
+            answer.reviewed = True
+        answer.save()
+        return HttpResponse(status=204)
+    else:
+        pass
 
 
 def about(request):
@@ -65,39 +91,63 @@ def mysteries(request):
         "mysteries": mysteries
     })
 
+
+@login_required
 def profile(request):
     user_profile = User.objects.get(id=request.user.id)
-    return render(request, 'profile.html', {'user_profile': user_profile})
+    answers = Answer.objects.filter(answered_by=user_profile)
+    return render(request, 'profile.html', {'user_profile': user_profile, "answers": answers})
 
 
 def view_profile(request, user_id):
     user_profile = User.objects.get(id=user_id)
-    return render(request, 'profile.html', {'user_profile': user_profile})
+    answers = Answer.objects.filter(answered_by=user_profile)
+    return render(request, 'profile.html', {'user_profile': user_profile, "answers": answers})
+
 
 def sign_up(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('index')
+    if request.method == "POST":
+        email = request.POST["email"]
+
+        # Ensure password matches confirmation
+        password = request.POST["password"]
+        confirmation = request.POST["confirmation"]
+        if password != confirmation:
+            return render(request, "sign_up.html", {
+                "message": "Passwords must match."
+            })
+
+        # Attempt to create new user
+        try:
+            user = User.objects.create_user(email, email, password)
+            user.save()
+        except IntegrityError as e:
+            print(e)
+            return render(request, "sign_up.html", {
+                "message": "Email address already taken."
+            })
+        login(request, user)
+        return redirect("index")
     else:
-        form = SignUpForm()
-    return render(request, 'sign_up.html', {'form': form})
+        return render(request, "sign_up.html")
 
 def log_in(request):
-    if request.method == 'POST':
-        form = LogInForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect('index')
+    if request.method == "POST":
+        # Attempt to sign user in
+        email = request.POST["email"]
+        password = request.POST["password"]
+        user = authenticate(request, username=email, password=password)
+
+        # Check if authentication successful
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            return render(request, "log_in.html", {
+                "message": "Invalid email and/or password."
+            })
     else:
-        form = LogInForm()
-    return render(request, 'log_in.html', {'form': form})
+        return render(request, "log_in.html")
 
     
 def logout_view(request):

@@ -21,5 +21,7 @@ class Mystery(models.Model):
 
 class Answer(models.Model):
     answer = models.TextField()
+    correct = models.BooleanField(default=True)
+    reviewed = models.BooleanField(default=False)
     answered_by = models.ForeignKey(User, on_delete=models.CASCADE)
     mystery = models.ForeignKey(Mystery, on_delete=models.CASCADE)

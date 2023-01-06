@@ -2,37 +2,69 @@
 
 {% block body %}
 <div class="container mx-auto p-5">
-    <h1 class="text-2xl font-bold my-2">{{mystery.title}}</h1>
-    <p>{{mystery.description}}</p>
+    <h1 class="text-4xl font-bold my-2 text-center">{{mystery.title}}</h1>
+    <p class="text-lg">{{mystery.description}}</p>
 
-    <h2 class="text-xl font-semibold mt-2">Clues</h2>
+
+    <h2 class="text-xl font-bold mt-4">Clues</h2>
     {% if mystery.clues %}
-    <p>{{mystery.clues}}</p>
+    <p class="text-lg">{{mystery.clues}}</p>
     {% else %}
-    <p>No clues were provided</p>
+    <p class="text-lg">No clues were provided</p>
     {% endif %}
 
+    {% if mystery.created_by == user %}
+    <h2 class="text-2xl text-center font-bold my-4">Review Answers</h2>
+    {% for answer in reviews %}
+    <div class="w-full rounded overflow-hidden shadow-lg bg-white mb-4">
+        <!-- <img class="w-full" src="mystery-image.jpg" alt="Mystery Image"> -->
+        <div class="px-6 py-4">
+            <a href="{% url 'view_profile' answer.answered_by.id %}"
+                class="font-bold text-xl mb-2">{{answer.answered_by.username}}</a>
+            <p class="text-gray-700 text-base">
+                {{answer.answer}}
+            </p>
+            <div class="flex gap-2">
+                <button class="btn border-2 border-green-400" id="correct-btn" onclick="review(this, true)"
+                    data-ans-id="{{answer.id}}"><i class="bi bi-check text-green-500"></i>
+                    Correct</button>
+                <button onclick="review(this, false)" data-ans-id="{{answer.id}}" id="wrong-btn"
+                    class="btn border-2 border-red-400"><i class="bi bi-x text-red-500"></i>
+                    Wrong</button>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    No Reviews pending
+
+    {% endfor %}
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    {% if user_answer or mystery.created_by == user %}
     {% if user_answer %}
     <h3 class="text-xl font-bold mt-2">Your Answer</h3>
     <p>{{user_answer.answer}}</p>
+    {% endif %}
 
     <button class="btn btn-primary my-4" onclick="document.getElementById('solution').classList.toggle('hidden')">See
         Solution</button>
 
-    <div id="solution">
-        <h2 class="text-xl font-bold">Solution</h2>
+    <div id="solution" class="hidden">
+        <h2 class="text-2xl font-bold text-center">Solution</h2>
         <p class="text-lg">{{mystery.solution}}</p>
     </div>
 
-    <button class="btn btn-primary my-4" onclick="document.getElementById('answers').classList.toggle('hidden')">See all
+    <button class="btn btn-primary my-4" onclick="document.getElementById('answers').classList.toggle('hidden')">Show
+        All
         Answers</button>
 
     <div id="answers" class="hidden">
         <h2 class="text-xl font-bold my-4">All Answers by Users</h2>
-        <div class="flex gap-2">
+        <div class="flex gap-4">
 
             {% for answer in all_answers %}
-            <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+            <div class="w-full rounded overflow-hidden shadow-lg bg-white">
                 <!-- <img class="w-full" src="mystery-image.jpg" alt="Mystery Image"> -->
                 <div class="px-6 py-4">
                     <a href="{% url 'view_profile' answer.answered_by.id %}"
@@ -40,27 +72,66 @@
                     <p class="text-gray-700 text-base">
                         {{answer.answer}}
                     </p>
+                    <div>
+                        Status:
+                        {% if not answer.reviewed %}
+                        Review pending
+                        {% elif answer.correct %}
+                        Correct
+                        {% else %}
+                        Wrong
+                        {% endif %}
+                    </div>
                 </div>
             </div>
+            {% empty %}
+            No Answers yet
             {% endfor %}
         </div>
     </div>
     {% else %}
     <button class=" btn btn-primary my-4" onclick="document.getElementById('answer-form').classList.toggle('hidden')">
-        Answer
-        This Mystery</button>
+        Answer This Mystery</button>
     {% endif %}
 
-    <form method="post" class="flex flex-col p-4 justify-center gap-4 hidden" id="answer-form"
+    <form method="post" class="flex flex-col mt-4 justify-center gap-4 hidden" id="answer-form"
         action="{% url 'answer_mystery' mystery.id %}">
         {% csrf_token %}
 
         <div class="flex flex-col gap-2  justify-start">
             <label for="answer">Answer: </label>
-            <textarea type="text" name="answer" id="answer" placeholder="Answer" required></textarea>
+            <textarea type="text" class="rounded" name="answer" id="answer" placeholder="Answer" required></textarea>
         </div>
+        <div>
 
-        <input type="submit" value="Submit" class="btn btn-primary">
+            <input type="submit" value="Submit" class="btn btn-primary">
+        </div>
     </form>
+
+    {% else %}
+    <div class="p-2 border-2 border-black my-4"><a href="{% url 'login' %}" class="underline ">Login</a> to Answer and
+        see other's solutions.
+    </div>
+
+    {% endif %}
 </div>
+
+<script>
+    function review(element, correct) {
+        let ans_id = element.dataset.ansId
+        fetch(`/review/${ans_id}`, {
+            method: "PUT",
+            body: JSON.stringify({
+                correct
+            }),
+        })
+            .then(() => {
+                element.parentElement.parentElement.classList.add("hidden")
+                location.reload();
+            })
+            .catch(err => {
+                console.log("Error: ", err);
+            })
+    }
+</script>
 {% endblock %}

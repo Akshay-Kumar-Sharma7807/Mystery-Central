@@ -4,18 +4,18 @@
 
 {% block body %}
 <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold">Welcome to MysteryHub</h1>
-    <p>Here you can find all kinds of mysteries to solve and explore.</p>
+    <h1 class="text-4xl font-bold mt-4 text-center">Welcome to MysteryHub</h1>
+    <p class="text-lg text-center">Here you can find all kinds of mysteries to solve and explore.</p>
 
-    <h2 class="text-2xl font-bold my-4">Explore</h2>
+    <h2 class="text-2xl font-bold my-4">Explore Mysteries <i class="bi bi-compass"></i></h2>
 
-    <div class="flex flex-wrap p-4 gap-4 grid-cols-none">
+    <div class="flex flex-wrap gap-4 grid-cols-none">
         {% for mystery in mysteries %}
         <a href="{% url 'view_mystery' mystery.id %}" class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
             <!-- <img class="w-full" src="mystery-image.jpg" alt="Mystery Image"> -->
             <div class="px-6 py-4">
                 <div class="font-bold text-xl mb-2">{{mystery.title}}</div>
-                <p class="text-gray-700 text-base">
+                <p class="text-gray-700 text-base  line-clamp-6">
                     {{mystery.description}}
                 </p>
             </div>
@@ -31,4 +31,8 @@
         {% endfor %}
     </div>
 </div>
+
+<footer class="container mx-auto p-4 text-xl text-center">
+    Made for Maple x Tommy Hacks 2023
+</footer>
 {% endblock %}

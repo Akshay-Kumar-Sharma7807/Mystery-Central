@@ -11,6 +11,7 @@ urlpatterns = [
     path('mysteries', views.mysteries, name="mysteries"),
     path('mystery/<int:myst_id>', views.view_mystery, name="view_mystery"),
     path('answer/<int:myst_id>', views.answer_mystery, name="answer_mystery"),
+    path('review/<int:ans_id>', views.review_answer, name="review"),
 
     # auth
     path('accounts/login', views.log_in, name="login"),

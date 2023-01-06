@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 class CreateMysteryForm(forms.ModelForm):
     class Meta:
         model = Mystery
-        fields = ['title', 'description']
+        fields = ['title', 'description', 'clues', 'solution']
 
 class AnswerForm(forms.ModelForm):
     class Meta:
