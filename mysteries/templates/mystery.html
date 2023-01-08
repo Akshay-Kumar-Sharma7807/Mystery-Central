@@ -3,6 +3,12 @@
 {% block body %}
 <div class="container mx-auto p-5">
     <h1 class="text-4xl font-bold my-2 text-center">{{mystery.title}}</h1>
+    <div class="px-6 py-4 flex justify-center gap-2">
+        {% for tag in mystery.tags.all %}
+        <span
+            class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700">#{{tag.name}}</span>
+        {% endfor %}
+    </div>
     <p class="text-lg">{{mystery.description}}</p>
 
 

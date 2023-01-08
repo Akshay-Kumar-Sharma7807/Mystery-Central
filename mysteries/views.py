@@ -7,7 +7,7 @@ from .forms import SignUpForm, LogInForm
 from .forms import CreateMysteryForm, AnswerForm
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import User, Mystery, Answer
+from .models import User, Mystery, Answer, Tag
 
 # Index page for the website
 def index(request):
@@ -25,8 +25,11 @@ def create_mystery(request):
         print(form.is_valid())
         print(form)
         if form.is_valid():
+            print(form.cleaned_data)
             mystery = form.save(commit=False)
             mystery.created_by = request.user
+            mystery.save()
+            mystery.tags.add(*form.cleaned_data["tags"])
             mystery.save()
             return redirect('view_mystery', myst_id=mystery.id)
     else:
@@ -87,6 +90,15 @@ def mysteries(request):
         "mysteries": mysteries
     })
 
+def mysteries_by_tag(request, tag_name):
+    tag = Tag.objects.filter(name=tag_name).first()
+
+    mysteries = Mystery.objects.filter(tags=tag)
+
+    return render(request, "mysteries.html", {
+        "mysteries": mysteries,
+        "title": "Tag: " + tag.name
+    })
 
 def about(request):
     return render(request, 'about.html')
@@ -97,7 +109,18 @@ def settings(request):
 @login_required
 def profile(request):
     user_profile = User.objects.get(id=request.user.id)
+
+    if request.method == "POST":
+        print("request method is post")
+        
+        # data = json.loads(request.body)
+        if request.POST["bio"] is not None:
+            user_profile.bio = request.POST["bio"]
+
+        user_profile.save()
+
     answers = Answer.objects.filter(answered_by=user_profile)
+
     return render(request, 'profile.html', {'user_profile': user_profile, "answers": answers})
 
 

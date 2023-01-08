@@ -9,6 +9,11 @@ class User(AbstractUser):
 class Skill(models.Model):
     name = models.CharField(max_length=50)
 
+class Tag(models.Model):
+    name=models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
 
 class Mystery(models.Model):
     title = models.CharField(max_length=200)
@@ -18,6 +23,7 @@ class Mystery(models.Model):
     clues = models.TextField()
     is_solved = models.BooleanField(default=False)
     solution = models.TextField()
+    tags = models.ManyToManyField(to=Tag, related_name="mysteries", blank=True)
 
 class Answer(models.Model):
     answer = models.TextField()

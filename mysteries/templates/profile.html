@@ -11,10 +11,27 @@
             </div>
         </div>
         <div class="mb-4">
+
+            {% if user_profile == user %}
+            <form method="post" class="flex flex-col mt-4 justify-center gap-4" id="bio-form">
+                {% csrf_token %}
+
+                <div class="flex flex-col gap-2  justify-start">
+                    <label for="bio" class="text-lg font-bold">Bio: </label>
+                    <textarea type="text" class="rounded" name="bio" id="bio" placeholder="Tell about yourself"
+                        required>{{user_profile.bio}}</textarea>
+                </div>
+                <div>
+
+                    <input type="submit" value="Submit" class="btn btn-primary">
+                </div>
+            </form>
+
+            {% else %}
             <h3 class="font-bold text-lg mb-2">Bio</h3>
-            <p class="text-gray-700 text-base">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere
-                erat
-                a ante.</p>
+            <p class="text-gray-700 text-base">{{ user_profile.bio|default:"No bio" }}</p>
+            {% endif %}
+
         </div>
         <div class="mb-4">
             <h3 class="font-bold text-lg mb-2">Skills</h3>
